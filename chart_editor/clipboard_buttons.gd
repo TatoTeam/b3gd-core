@@ -10,7 +10,9 @@ func _process(_delta: float) -> void:
 func _on_copy_button_pressed() -> void:
 	ChartEditor.clipboard_note_info.clear()
 	ChartEditor.clipboard = ChartEditor.selection
-	
+	update_clipboard_note_info()
+
+func update_clipboard_note_info():
 	for timeline_point in ChartEditor.clipboard:
 		if timeline_point is not Note:
 			continue
@@ -34,7 +36,9 @@ func _on_paste_button_pressed() -> void:
 	
 	for timeline_point in ChartEditor.clipboard:
 		var new_timeline_point = timeline_point.duplicate()
+		
 		ChartEditor.add_to_selection(new_timeline_point, false)
+		
 		new_timeline_point.time -= time_offset
 		new_timeline_point.time += ChartEditor.song_audio_player.song_position_seconds
 		if timeline_point is Note:
@@ -64,6 +68,7 @@ func _on_paste_button_pressed() -> void:
 			)
 	
 	ChartEditor.undo_redo.commit_action()
+	update_clipboard_note_info()
 	
 	#var clipboard_contents = ChartEditor.clipboard
 	
