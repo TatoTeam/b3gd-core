@@ -1,24 +1,25 @@
 @icon("uid://bsm27yjamvfmo") # TODO: katherine replace ythis
 class_name EventPlayCharacterAnimation extends Event
 
-@export_range(0.0, 40.0, 1.0, "or_greater", "camera_targets") var target_idx: int = 0:
+@export var character_node_name: String:
 	set(value):
-		target_idx = value
+		character_node_name = value
 		if parent != null:
 			init()
 
 @export var animation_name: String
 @export var can_interrupt: bool
 
-var character: Character
+var characters: Array[Character]
 
 func init():
-	if parent.get_tree().get_first_node_in_group("Characters") == null:
-		return
-	
-	var choices = parent.get_tree().get_first_node_in_group("Characters").get_children()
-	character = choices[clamp(target_idx, 0, choices.size() - 1)]
+	characters.clear()
+	var choices = parent.get_tree().get_nodes_in_group("Character")
+	for choice in choices:
+		if choice.name == character_node_name:
+			characters.append(choice)
 
-func play(_speed: float = 1.0):
-	if character != null:
-		character.play_external_animation(animation_name, can_interrupt)
+func play(speed: float = 1.0):
+	for character in characters:
+		if character != null && speed > 0:
+			character.play_external_animation(animation_name, can_interrupt)
