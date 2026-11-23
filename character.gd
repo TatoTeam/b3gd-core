@@ -12,7 +12,7 @@ class_name Character
 @export_subgroup("Prefixes")
 @export var sing_prefix = "sing_"
 @export var miss_prefix = "miss_"
-@export var added_suffix: String = ""
+@export var global_suffix: String = ""
 
 @export_group("Playback")
 @export var playback_speed: float = 1.0
@@ -91,7 +91,7 @@ func beat_hit(beat: int) -> void:
 	idle_anim_idx = (idle_anim_idx + 1) % idle_anim_order.size()
 	
 	play_animation(AnimationType.ANIMATION_NONE)
-	play_animation(AnimationType.ANIMATION_IDLE, idle_anim_idx, added_suffix)
+	play_animation(AnimationType.ANIMATION_IDLE, idle_anim_idx)
 	
 	current_anim.type = AnimationType.ANIMATION_IDLE
 	current_anim.id = idle_anim_idx
@@ -102,7 +102,7 @@ func note_press(strum_line_id: int, receptor_id: int, note: Note, _hold_delta: f
 	
 	time_since_last_sing = sing_length if note.hold_pressed else 0.0
 	
-	var suffix = added_suffix
+	var suffix = ""
 	if note is NoteSuffix:
 		suffix = note.suffix
 	
@@ -130,7 +130,9 @@ func get_suffixed_animation(animation_name: String, suffix: String) -> String:
 	elif thing_to_animate is AnimationPlayer:
 		animation_list = thing_to_animate.get_animation_list()
 	
-	if animation_list.has(animation_name + suffix):
+	if animation_list.has(animation_name + suffix + global_suffix):
+		return animation_name + suffix + global_suffix
+	elif animation_list.has(animation_name + suffix):
 		return animation_name + suffix
 	
 	return animation_name
