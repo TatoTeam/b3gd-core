@@ -1,4 +1,5 @@
 extends Node
+class_name Character
 
 @export var thing_to_animate: Node
 @export var strumline: int
@@ -42,6 +43,8 @@ var time_since_last_sing = 0.0
 
 var current_anim = {"type": AnimationType.ANIMATION_NONE, "id": 0}
 var anim_changed = null
+
+var can_interrupt_external = false
 
 func _ready() -> void:
 	var song_audio_player = SongAudioPlayer.instance
@@ -106,8 +109,9 @@ func note_press(strum_line_id: int, receptor_id: int, note: Note, _hold_delta: f
 	if current_anim.type == AnimationType.ANIMATION_SING and note.hold_pressed:
 		thing_to_animate.speed_scale = hold_speed * playback_speed
 	else:
-		play_animation(AnimationType.ANIMATION_NONE)
-		play_animation(AnimationType.ANIMATION_SING, receptor_id, suffix)
+		if !(thing_to_animate.is_playing() && current_anim.type == AnimationType.ANIMATION_EXTERNAL && !can_interrupt_external):
+			play_animation(AnimationType.ANIMATION_NONE)
+			play_animation(AnimationType.ANIMATION_SING, receptor_id, suffix)
 
 func note_miss(strum_line_id: int, receptor_id: int, _note: Note) -> void:
 	if strumline != strum_line_id or ignore_miss: 
@@ -118,6 +122,26 @@ func note_miss(strum_line_id: int, receptor_id: int, _note: Note) -> void:
 	
 	play_animation(AnimationType.ANIMATION_MISS, receptor_id)
 
+func get_suffixed_animation(animation_name: String, suffix: String) -> String:
+	var animation_list: Array = []
+	
+	if thing_to_animate is AnimatedSprite2D:
+		animation_list = thing_to_animate.sprite_frames.get_animation_names()
+	elif thing_to_animate is AnimationPlayer:
+		animation_list = thing_to_animate.get_animation_list()
+	
+	if animation_list.has(animation_name + suffix):
+		return animation_name + suffix
+	
+	return animation_name
+
+func play_external_animation(animation_name: String, can_interrupt: bool):
+	if animation_name == "":
+		return
+	
+	current_anim.type = AnimationType.ANIMATION_EXTERNAL
+	can_interrupt_external = can_interrupt
+	thing_to_animate.play(get_suffixed_animation(animation_name, ""))
 
 func play_animation(type: AnimationType, id:int = 0, suffix: String = ""):
 	current_anim.type = type
@@ -148,18 +172,8 @@ func play_animation(type: AnimationType, id:int = 0, suffix: String = ""):
 	if animation_name == "":
 		return
 	
-	var suffix_valid = true
-	if thing_to_animate is AnimatedSprite2D:
-		suffix_valid = thing_to_animate.sprite_frames.get_animation_names().has(animation_name + suffix)
-	elif thing_to_animate is AnimationPlayer:
-		suffix_valid = thing_to_animate.get_animation_list().has(animation_name + suffix)
-	
 	thing_to_animate.speed_scale = playback_speed
-	
-	if suffix_valid:
-		thing_to_animate.play(animation_name + suffix)
-	else:
-		thing_to_animate.play(animation_name)
+	thing_to_animate.play(get_suffixed_animation(animation_name, suffix))
 
 func animated_sprite_animation_changed():
 	if anim_changed == null:
