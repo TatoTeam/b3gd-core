@@ -6,6 +6,7 @@ static var instance: EventPlayer
 signal pre_init_events()
 
 var last_played_event: int = -1
+var _events_initialized: bool = false
 var events:Array[Event]
 
 @export_group("Node References")
@@ -39,6 +40,16 @@ func init_events() -> void:
 		event.parent = self
 		event.init()
 
+	last_played_event = -1
+	if _events_initialized:
+		var position_seconds = song_audio_player.song_position_seconds
+		for i in range(events.size()):
+			if events[i].time > position_seconds:
+				break
+			last_played_event = i
+	
+	_events_initialized = true
+
 func call_code_event(event_name: String, params: Array):
 	if code_event_functions.get(event_name) == null:
 		return
@@ -57,6 +68,9 @@ func play_event(event: Event, speed: float):
 	on_event_played.emit(event, speed)
 
 func process_events() -> bool:
+	if events.is_empty():
+		return false
+
 	if last_played_event >= events.size():
 		if events[-1].time <= song_audio_player.song_position_seconds:
 			last_played_event = max(events.size() - 1, -1)
