@@ -12,7 +12,6 @@ class_name EventSetCharacterGlobalAnimationSuffix extends Event
 var character: Character
 
 func init():
-	print(parent.get_tree(), " ", parent.get_tree().get_first_node_in_group("Characters"))
 	if parent.get_tree().get_first_node_in_group("Characters") == null:
 		return
 	

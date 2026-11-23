@@ -163,7 +163,7 @@ func get_script_icon(script: Script) -> Texture2D:
 	
 	var path: String = _class_icon_paths.get(script.resource_path, "")
 	var icon: Texture2D = null
-	print(path)
+	
 	if not path.is_empty():
 		icon = load(path) as Texture2D
 		if icon == null:
