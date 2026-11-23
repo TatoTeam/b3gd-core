@@ -47,6 +47,8 @@ var anim_changed = null
 var can_interrupt_external = false
 
 func _ready() -> void:
+	add_to_group("Character")
+	
 	var song_audio_player = SongAudioPlayer.instance
 	if song_audio_player == null:
 		return
