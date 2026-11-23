@@ -47,7 +47,6 @@ func disable_editor() -> void:
 	if song_audio_player.paused:
 		song_audio_player.unpause()
 
-
 func enable_editor() -> void:
 	editor_active = true
 	editor_canvas.process_mode = Node.PROCESS_MODE_INHERIT
@@ -56,7 +55,6 @@ func enable_editor() -> void:
 	note_manager.process_mode = Node.PROCESS_MODE_DISABLED
 	ui.process_mode = Node.PROCESS_MODE_DISABLED
 	ui.visible = false
-
 
 func add_editor() -> void:
 	editor_active = true
