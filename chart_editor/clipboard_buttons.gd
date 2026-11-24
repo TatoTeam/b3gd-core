@@ -43,6 +43,7 @@ func _on_paste_button_pressed() -> void:
 		new_timeline_point.time += ChartEditor.song_audio_player.song_position_seconds
 		if timeline_point is Note:
 			var receptor: Receptor = ChartEditor.clipboard_note_info[timeline_point as Note]
+			new_timeline_point.parent = receptor
 			ChartEditor.undo_redo.add_do_reference(new_timeline_point)
 			ChartEditor.undo_redo.add_do_method(func():
 				receptor.notes.append(new_timeline_point)

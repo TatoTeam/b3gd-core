@@ -33,5 +33,8 @@ func _on_button_toggled(toggled_on):
 
 func _on_button_gui_input(input_event):
 	if input_event is InputEventMouseButton:
-		if input_event.pressed && input_event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
+		if input_event.pressed && input_event.button_index == MouseButton.MOUSE_BUTTON_LEFT && !input_event.shift_pressed && ChartEditor.selection.has(event):
+			ChartEditor.instance.drag_started.emit(event)
+			accept_event()
+		elif input_event.pressed && input_event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
 			ChartEditor.instance.remove_event(event)

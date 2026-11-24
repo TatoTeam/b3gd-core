@@ -82,6 +82,9 @@ func _on_note_gui_input(event):
 			else:
 				ChartEditor.add_to_selection(note)
 			accept_event()
+		elif event.pressed && event.button_index == MouseButton.MOUSE_BUTTON_LEFT && ChartEditor.selection.has(note):
+			ChartEditor.instance.drag_started.emit(note)
+			accept_event()
 		elif event.pressed && event.button_index == MouseButton.MOUSE_BUTTON_RIGHT:
 			remove_note()
 			accept_event()

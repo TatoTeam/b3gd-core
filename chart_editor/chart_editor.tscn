@@ -30,6 +30,7 @@
 [ext_resource type="Script" uid="uid://d1cnb4hugwiyp" path="res://b3gd/chart_editor/setter_getters/property_getter_setter_checkbox.gd" id="20_tfe68"]
 [ext_resource type="Script" uid="uid://268y2nl6mtvo" path="res://b3gd/chart_editor/clipboard_buttons.gd" id="21_laud3"]
 [ext_resource type="Script" uid="uid://cgqshpkil63a5" path="res://b3gd/chart_editor/fake_note_manager.gd" id="23_5spb2"]
+[ext_resource type="Script" uid="uid://3ei1tuew0omj" path="res://b3gd/chart_editor/selection_dragger.gd" id="31_8v0hc"]
 
 [sub_resource type="Resource" id="Resource_5aops"]
 script = ExtResource("3_cm7rd")
@@ -297,6 +298,14 @@ patch_margin_bottom = 2
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 script = ExtResource("13_8lyhl")
+
+[node name="SelectionDragger" type="Control" parent="UIContainer/WorkAreaScroll/Container/TimelineContainer/Timeline" unique_id=1853882966]
+anchors_preset = 0
+offset_left = -757.0
+offset_right = 1155.0
+offset_bottom = 1072.0
+mouse_filter = 2
+script = ExtResource("31_8v0hc")
 
 [node name="StrumLineContainer" type="HBoxContainer" parent="UIContainer/WorkAreaScroll/Container" unique_id=545850274]
 layout_mode = 2
@@ -797,6 +806,7 @@ strum_line_container = NodePath("../UIContainer/WorkAreaScroll/Container/StrumLi
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="FakeNoteManager" unique_id=1079146878]
 stream = SubResource("AudioStreamPolyphonic_82mxf")
 
+[connection signal="drag_started" from="." to="UIContainer/WorkAreaScroll/Container/TimelineContainer/Timeline/SelectionDragger" method="_on_chart_editor_drag_started"]
 [connection signal="item_selected" from="UIContainer/WorkAreaScroll/Container/TimelineContainer/EventMaker/ClassBox" to="UIContainer/WorkAreaScroll/Container/TimelineContainer/EventMaker" method="_on_class_box_item_selected"]
 [connection signal="value_changed" from="UIContainer/SongScrubber" to="UIContainer/SongScrubber" method="_on_value_changed"]
 [connection signal="item_selected" from="UIContainer/RightBarScroll/RightBarContainer/ChartInfoPanel/Margin/VBox/Header/PanelContainer/TimeBar/TimeFormatBox" to="UIContainer/RightBarScroll/RightBarContainer/ChartInfoPanel/Margin/VBox/Header/PanelContainer/TimeBar/TimeFormatBox" method="_on_item_selected"]

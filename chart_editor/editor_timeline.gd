@@ -50,7 +50,7 @@ func _input(event):
 			editing_notes = editing_notes || (event.pressed && event.button_index == MOUSE_BUTTON_RIGHT)
 		
 		for node: EditorNote in note_nodes.values():
-			node.head.mouse_filter = Control.MOUSE_FILTER_STOP if editing_notes else Control.MOUSE_FILTER_IGNORE
+			node.head.mouse_filter = Control.MOUSE_FILTER_STOP if editing_notes || ChartEditor.selection.has(node.note) else Control.MOUSE_FILTER_IGNORE
 	
 	if event is InputEventMouseMotion && event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 		if !is_visible_in_tree(): return
@@ -81,10 +81,12 @@ func _sync_notes() -> void:
 		
 		for dir in receptors.size():
 			var receptor: Receptor = receptors[dir]
+			receptor.parent = strumline.strumline
 			for note in receptor.notes:
 				if note == null:
 					continue
 				
+				note.parent = receptor
 				present[note] = true
 				var node: EditorNote = note_nodes.get(note)
 				

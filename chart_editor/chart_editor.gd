@@ -22,6 +22,8 @@ static var current_note_type: String
 @onready var timeline: EditorTimeline = $UIContainer/WorkAreaScroll/Container/TimelineContainer/Timeline
 
 signal selection_updated
+@warning_ignore("unused_signal")
+signal drag_started(selectable: TimelinePoint)
 
 var inst_muted: bool:
 	set(value):

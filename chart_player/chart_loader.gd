@@ -71,6 +71,11 @@ func load_tracks():
 	tracks_loaded.emit()
 
 func load_notes(ignore_past_notes: bool = false):
+	for strum_line in chart_player.chart.strum_lines:
+		for receptor in strum_line.receptors:
+			receptor.parent = strum_line
+			receptor.sort_notes()
+
 	for strum_line in note_manager.strum_lines:
 		get_tree().queue_delete(strum_line)
 	
@@ -80,6 +85,7 @@ func load_notes(ignore_past_notes: bool = false):
 		strum_line.function = [note_manager.player_receptor_input, note_manager.cpu_receptor_input][int(strum_line.cpu)]
 		
 		for receptor in strum_line.receptors:
+			receptor.parent = strum_line
 			receptor.sort_notes()
 			
 			receptor.last_press = Receptor.ReceptorInput.new()

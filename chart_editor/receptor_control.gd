@@ -11,6 +11,7 @@ func _process(_delta):
 
 func _on_add_receptor_pressed():
 	var new_receptor = Receptor.new()
+	new_receptor.parent = editor_strumline.strumline
 	
 	ChartEditor.undo_redo.create_action("Add Receptor")
 	ChartEditor.undo_redo.add_do_reference(new_receptor)

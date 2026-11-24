@@ -8,6 +8,14 @@ class_name Note extends TimelinePoint
 ## I'm fine with this being in chart data as it is a single bool
 var hold_pressed = false
 
+var parent: Receptor:
+	get():
+		return _parent.get_ref() if _parent else null
+	set(value):
+		_parent = weakref(value) if value else null
+
+var _parent: WeakRef
+
 # If note functions return false, the default behaviour will be ignored.
 func note_hit() -> bool:
 	return true
