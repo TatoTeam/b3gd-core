@@ -17,13 +17,15 @@ var _parent: WeakRef
 
 class ReceptorInput extends RefCounted:
 	## The time the input occured. Used for rendering
-	@export var input_time: float = -1000.0
+	var input_time: float = -1000.0
 	## If drawing this press should be ignored. For when an input is released
-	@export var ignore_draw: bool = true
+	var ignore_draw: bool = true
 	## This is "true" when the input didnt hit any notes.
-	@export var dummy: bool = false
+	var dummy: bool = false
+	var note: Note = null
 
-var last_press:ReceptorInput
+var last_press:ReceptorInput = ReceptorInput.new()
+var active_note_id: int = -1
 
 func sort_notes():
 	for note in notes:

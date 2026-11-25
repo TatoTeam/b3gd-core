@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://yun2cik2wu08"]
+
+[ext_resource type="Script" uid="uid://deaqasrxhhenn" path="res://b3gd/chart_player/note_renderers/node_system/note_object.gd" id="1_p7tqa"]
+[ext_resource type="Texture2D" uid="uid://dhh5fdadf5hpp" path="res://b3gd/chart_player/noteskin.png" id="1_w8rag"]
+
+[node name="Note" type="Node3D" unique_id=1931072008]
+script = ExtResource("1_p7tqa")
+
+[node name="Note" type="Sprite3D" parent="." unique_id=2089016890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.001)
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_w8rag")
+hframes = 11
+vframes = 3
+frame = 2
+
+[node name="Node3D" type="Node3D" parent="." unique_id=919344380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="HoldEnd2" type="Sprite3D" parent="Node3D" unique_id=111527676]
+transform = Transform3D(1, 0, 0, 0, 3.13, 0, 0, 0, 1, 0, 1, 0)
+offset = Vector2(0, -16)
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_w8rag")
+hframes = 11
+vframes = 6
+frame = 24
+
+[node name="HoldEnd" type="Sprite3D" parent="Node3D" unique_id=1209694191]
+offset = Vector2(0, -16)
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_w8rag")
+hframes = 11
+vframes = 6
+frame = 35

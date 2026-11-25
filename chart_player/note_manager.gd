@@ -30,10 +30,13 @@ func cpu_receptor_input(strum_line_id, receptor_id):
 	if receptor.notes.size() == 0:
 		return
 	
+	if receptor.active_note_id >= receptor.notes.size():
+		return
+	
 	while receptor.notes[0].time <= song_audio_player.song_position_seconds:
 		hit_note(strum_line_id, receptor_id)
 		receptor.last_press.ignore_draw = false
-		if receptor.notes.size() == 0 or receptor.notes[0].hold_pressed:
+		if receptor.notes.size() == 0 or receptor.note_state == Note.NoteState.NOTE_STARTED:
 			return
 
 func player_receptor_input(strum_line_id, receptor_id):
@@ -45,8 +48,12 @@ func player_receptor_input(strum_line_id, receptor_id):
 	receptor.last_press.ignore_draw = !is_held
 	
 	var note_distance = 100000
+	
+	if receptor.active_note_id >= receptor.notes.size():
+		return
 	if receptor.notes.size() > 0:
-		note_distance = receptor.notes[0].time - song_audio_player.song_position_seconds
+		note_distance = receptor.notes[receptor.active_note_id].time - song_audio_player.song_position_seconds
+	
 	
 	if note_distance > hit_window * 0.5:
 		if is_pressed:
@@ -54,22 +61,26 @@ func player_receptor_input(strum_line_id, receptor_id):
 	elif note_distance < hit_window * -0.5:
 		miss_note(strum_line_id, receptor_id)
 	else:
-		if !is_held and receptor.notes[0].hold_pressed and receptor.notes[0].length < hold_end_window:
-			receptor.notes.pop_front()
-		
-		if is_pressed or (is_held and receptor.notes[0].hold_pressed):
+		if !is_held and receptor.notes[receptor.active_note_id].note_state == Note.NoteState.NOTE_STARTED and receptor.notes[receptor.active_note_id].length < hold_end_window:
+			hit_note(strum_line_id, receptor_id)
+		if is_pressed or (is_held and receptor.notes[receptor.active_note_id].note_state == Note.NoteState.NOTE_STARTED):
 			hit_note(strum_line_id, receptor_id)
 
 func hit_dummy(strum_line_id, receptor_id):
-	strum_lines[strum_line_id].receptors[receptor_id].last_press.input_time = song_audio_player.song_position_seconds
-	strum_lines[strum_line_id].receptors[receptor_id].last_press.dummy = true
+	var receptor = strum_lines[strum_line_id].receptors[receptor_id]
+	receptor.last_press.input_time = song_audio_player.song_position_seconds
+	receptor.last_press.dummy = true
+	receptor.last_press.note = null
+	
 	note_press.emit(strum_line_id, receptor_id, null, 1.0)
 
 func hit_note(strum_line_id, receptor_id):
 	var receptor = strum_lines[strum_line_id].receptors[receptor_id]
 	receptor.last_press.input_time = song_audio_player.song_position_seconds
 	receptor.last_press.dummy = false
-	var note = receptor.notes[0]
+	receptor.last_press.input_time = song_audio_player.song_position_seconds
+	receptor.last_press.note = receptor.notes[receptor.active_note_id]
+	var note = receptor.notes[receptor.active_note_id]
 	
 	var time_difference = song_audio_player.song_position_seconds - note.time
 	
@@ -80,10 +91,12 @@ func hit_note(strum_line_id, receptor_id):
 	if note.length > 0:
 		move_sustain(strum_line_id, receptor_id, time_difference)
 	else:
-		receptor.notes.pop_front()
+		receptor.notes[receptor.active_note_id].note_state = Note.NoteState.NOTE_COMPLETE
+		receptor.active_note_id += 1
 
 func miss_note(strum_line_id, receptor_id):
-	var note = strum_lines[strum_line_id].receptors[receptor_id].notes[0]
+	var receptor = strum_lines[strum_line_id].receptors[receptor_id]
+	var note = receptor.notes[receptor.active_note_id]
 	
 	if note.note_miss():
 		note_miss.emit(strum_line_id, receptor_id, note)
@@ -92,13 +105,16 @@ func miss_note(strum_line_id, receptor_id):
 	if note.length > 0:
 		move_sustain(strum_line_id, receptor_id, hit_window, true)
 	else:
-		strum_lines[strum_line_id].receptors[receptor_id].notes.pop_front()
+		receptor.notes[receptor.active_note_id].note_state = Note.NoteState.NOTE_MISSED
+		receptor.active_note_id += 1
 
 func move_sustain(strum_line_id, receptor_id, by: float, miss_on_negative: bool = false):
-	var note = strum_lines[strum_line_id].receptors[receptor_id].notes[0]
+	var receptor = strum_lines[strum_line_id].receptors[receptor_id]
+	var note: Note = receptor.notes[receptor.active_note_id]
 	note.time += by
 	note.length -= by
-	note.hold_pressed = true
+	note.length_taken += by
+	note.note_state = Note.NoteState.NOTE_STARTED
 	if note.length < 0 and miss_on_negative:
 		miss_note(strum_line_id, receptor_id)
 

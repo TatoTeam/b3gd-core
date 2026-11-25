@@ -5,13 +5,10 @@
 [ext_resource type="Script" uid="uid://cr3x8h58rufy1" path="res://b3gd/chart_player/event_player.gd" id="3_v3b1e"]
 [ext_resource type="Script" uid="uid://rypo2bh7qid7" path="res://b3gd/chart_player/note_manager.gd" id="4_t3y1r"]
 [ext_resource type="Script" uid="uid://dgeiwlewjhd38" path="res://b3gd/chart_player/chart_editor_activate.gd" id="5_cmch3"]
-[ext_resource type="Script" uid="uid://dvjswg4e6wv1q" path="res://b3gd/chart_player/note_renderers/gridrenderer/3dgridrenderer.gd" id="5_yp0gr"]
-[ext_resource type="Texture2D" uid="uid://bdnho2gsjp6c2" path="res://prefabs/noteskins/template.png" id="7_cdfgl"]
-[ext_resource type="Script" uid="uid://bctudmv5p4heo" path="res://b3gd/chart_player/note_renderers/gridrenderer/noteskingriddata.gd" id="8_rbo3x"]
-
-[sub_resource type="Resource" id="Resource_eb4vn"]
-script = ExtResource("8_rbo3x")
-metadata/_custom_type_script = "uid://bctudmv5p4heo"
+[ext_resource type="PackedScene" uid="uid://yun2cik2wu08" path="res://b3gd/chart_player/note_renderers/node_system/note_object.tscn" id="9_5icij"]
+[ext_resource type="Script" uid="uid://drva5tked0iuy" path="res://b3gd/chart_player/note_camera.gd" id="9_wento"]
+[ext_resource type="Script" uid="uid://blcs3v2qym74p" path="res://b3gd/chart_player/strum_line.gd" id="10_yao2k"]
+[ext_resource type="PackedScene" uid="uid://bqbh4xg126oab" path="res://b3gd/chart_player/note_renderers/node_system/receptor_object.tscn" id="11_darji"]
 
 [sub_resource type="Environment" id="Environment_v3b1e"]
 
@@ -51,38 +48,72 @@ focus_mode = 0
 stretch = true
 
 [node name="StrumlinesSubViewport" type="SubViewport" parent="UI/Strumlines" unique_id=8042913]
-own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
 anisotropic_filtering_level = 0
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="StrumLineRenderer" type="MeshInstance3D" parent="UI/Strumlines/StrumlinesSubViewport" unique_id=2002107423]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.9000001, 0)
-script = ExtResource("5_yp0gr")
-noteskin_texture = ExtResource("7_cdfgl")
-noteskin_data = SubResource("Resource_eb4vn")
-strum_line_idx = 0
-hold_resolution = 3.0
-cutoff_distance = 8.0
-
-[node name="StrumLineRenderer2" type="MeshInstance3D" parent="UI/Strumlines/StrumlinesSubViewport" unique_id=228372249]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.9, 0)
-script = ExtResource("5_yp0gr")
-noteskin_texture = ExtResource("7_cdfgl")
-noteskin_data = SubResource("Resource_eb4vn")
-hold_resolution = 3.0
-cutoff_distance = 8.0
-
 [node name="Camera3D" type="Camera3D" parent="UI/Strumlines/StrumlinesSubViewport" unique_id=955848793]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17)
-keep_aspect = 0
-projection = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+projection = 2
+current = true
 fov = 10.0
-size = 10.0
+size = 0.9
 near = 1.0
-far = 33.0
+far = 80.0
+script = ExtResource("9_wento")
+
+[node name="StrumLine2" type="Node3D" parent="UI/Strumlines/StrumlinesSubViewport" unique_id=1637505529]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.4583559, 0)
+script = ExtResource("10_yao2k")
+
+[node name="Receptors" type="Node3D" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine2" unique_id=946152035]
+
+[node name="Receptor" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine2/Receptors" unique_id=1646216793 instance=ExtResource("11_darji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.89996976, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+
+[node name="Receptor2" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine2/Receptors" unique_id=329952234 instance=ExtResource("11_darji")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.29996973, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 1
+
+[node name="Receptor3" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine2/Receptors" unique_id=1977049591 instance=ExtResource("11_darji")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.30003035, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 2
+
+[node name="Receptor4" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine2/Receptors" unique_id=694998709 instance=ExtResource("11_darji")]
+transform = Transform3D(-1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0, 0, 1, 0.90003026, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 3
+
+[node name="StrumLine" type="Node3D" parent="UI/Strumlines/StrumlinesSubViewport" unique_id=519321941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.4583559, 0)
+script = ExtResource("10_yao2k")
+strum_line_idx = 1
+
+[node name="Receptors" type="Node3D" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine" unique_id=1589633307]
+
+[node name="Receptor" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine/Receptors" unique_id=689214270 instance=ExtResource("11_darji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.89996976, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+
+[node name="Receptor2" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine/Receptors" unique_id=1221434952 instance=ExtResource("11_darji")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.29996973, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 1
+
+[node name="Receptor3" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine/Receptors" unique_id=1412853627 instance=ExtResource("11_darji")]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.30003035, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 2
+
+[node name="Receptor4" parent="UI/Strumlines/StrumlinesSubViewport/StrumLine/Receptors" unique_id=1311919740 instance=ExtResource("11_darji")]
+transform = Transform3D(-1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0, 0, 1, 0.90003026, 0.000108771026, 0)
+note_object_scene = ExtResource("9_5icij")
+receptor_index = 3
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1732893515]
 environment = SubResource("Environment_v3b1e")

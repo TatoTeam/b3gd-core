@@ -74,43 +74,34 @@ func load_notes(ignore_past_notes: bool = false):
 	for strum_line in chart_player.chart.strum_lines:
 		for receptor in strum_line.receptors:
 			receptor.parent = strum_line
+			receptor.active_note_id = 0
 			receptor.sort_notes()
-
-	for strum_line in note_manager.strum_lines:
-		get_tree().queue_delete(strum_line)
+			for note in receptor.notes:
+				note.time -= note.length_taken
+				note.length += note.length_taken
+				note.length_taken = 0
+				
+				note.note_state = Note.NoteState.NOTE_ACTIVE
 	
-	note_manager.strum_lines = chart_player.chart.strum_lines.duplicate_deep(Resource.DEEP_DUPLICATE_ALL)
+	note_manager.strum_lines = chart_player.chart.strum_lines
 	
 	for strum_line in note_manager.strum_lines:
 		strum_line.function = [note_manager.player_receptor_input, note_manager.cpu_receptor_input][int(strum_line.cpu)]
-		
-		for receptor in strum_line.receptors:
-			receptor.parent = strum_line
-			receptor.sort_notes()
-			
-			receptor.last_press = Receptor.ReceptorInput.new()
-			receptor.last_press.input_time = 0
-			receptor.last_press.ignore_draw = true
-			receptor.last_press.dummy = true
 	
 	if ignore_past_notes:
-		remove_notes_from_past()
+		ignore_past_notes()
 	
 	notes_loaded.emit()
 
-func remove_notes_from_past():
+func ignore_past_notes():
 	for strum_line in note_manager.strum_lines:
 		for receptor in strum_line.receptors:
-			var future_id_found = false
-			var note_id = 0
-			
-			while note_id < receptor.notes.size() and !future_id_found:
-				if receptor.notes[note_id].time >= song_audio_player.song_position_seconds:
-					future_id_found = true
-					continue
-				note_id += 1
-			
-			receptor.notes = receptor.notes.slice(note_id)
+			for note in receptor.notes:
+				if note.time < song_audio_player.song_position_seconds:
+					note.note_state = Note.NoteState.NOTE_ACTIVE
+				else:
+					receptor.active_note_id = receptor.notes.find(note)
+					break
 
 func load_events():
 	chart_player.chart.sort_events()

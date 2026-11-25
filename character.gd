@@ -102,13 +102,13 @@ func note_press(strum_line_id: int, receptor_id: int, note: Note, _hold_delta: f
 	if strumline != strum_line_id or ignore_sing: return
 	if note == null or note is NoteIgnore: return
 	
-	time_since_last_sing = sing_length if note.hold_pressed else 0.0
+	time_since_last_sing = sing_length if note.note_state == Note.NoteState.NOTE_STARTED else 0.0
 	
 	var suffix = ""
 	if note is NoteSuffix:
 		suffix = note.suffix
 	
-	if current_anim.type == AnimationType.ANIMATION_SING and note.hold_pressed:
+	if current_anim.type == AnimationType.ANIMATION_SING and note.note_state == Note.NoteState.NOTE_STARTED:
 		thing_to_animate.speed_scale = hold_speed * playback_speed
 	else:
 		if !(thing_to_animate.is_playing() && current_anim.type == AnimationType.ANIMATION_EXTERNAL && !can_interrupt_external):
