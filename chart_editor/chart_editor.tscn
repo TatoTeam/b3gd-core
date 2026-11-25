@@ -170,9 +170,27 @@ events = [SubResource("InputEventKey_cle1c"), SubResource("InputEventKey_yecj3")
 atlas = ExtResource("3_cqpfm")
 region = Rect2(1, 71, 9, 9)
 
+[sub_resource type="InputEventKey" id="InputEventKey_8v0hc"]
+device = -1
+ctrl_pressed = true
+keycode = 67
+unicode = 99
+
+[sub_resource type="Shortcut" id="Shortcut_5t0qm"]
+events = [SubResource("InputEventKey_8v0hc")]
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_8lyhl"]
 atlas = ExtResource("3_cqpfm")
 region = Rect2(33, 32, 14, 16)
+
+[sub_resource type="InputEventKey" id="InputEventKey_05qb2"]
+device = -1
+ctrl_pressed = true
+keycode = 86
+unicode = 118
+
+[sub_resource type="Shortcut" id="Shortcut_ct4hn"]
+events = [SubResource("InputEventKey_05qb2")]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8v0hc"]
 atlas = ExtResource("3_cqpfm")
@@ -533,7 +551,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 focus_mode = 0
 disabled = true
-shortcut = SubResource("Shortcut_kkbay")
+shortcut = SubResource("Shortcut_5t0qm")
 text = "Copy"
 icon = SubResource("AtlasTexture_8lyhl")
 
@@ -543,7 +561,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 focus_mode = 0
 disabled = true
-shortcut = SubResource("Shortcut_kkbay")
+shortcut = SubResource("Shortcut_ct4hn")
 text = "Paste"
 icon = SubResource("AtlasTexture_8v0hc")
 
