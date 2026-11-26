@@ -33,10 +33,10 @@ func cpu_receptor_input(strum_line_id, receptor_id):
 	if receptor.active_note_id >= receptor.notes.size():
 		return
 	
-	while receptor.notes[0].time <= song_audio_player.song_position_seconds:
+	while receptor.notes[receptor.active_note_id].time <= song_audio_player.song_position_seconds:
 		hit_note(strum_line_id, receptor_id)
 		receptor.last_press.ignore_draw = false
-		if receptor.notes.size() == 0 or receptor.note_state == Note.NoteState.NOTE_STARTED:
+		if receptor.notes.size() == 0 or receptor.notes[receptor.active_note_id].note_state == Note.NoteState.NOTE_STARTED:
 			return
 
 func player_receptor_input(strum_line_id, receptor_id):
