@@ -75,6 +75,7 @@ func load_notes(ignore_past_notes: bool = false):
 		for receptor in strum_line.receptors:
 			receptor.parent = strum_line
 			receptor.active_note_id = 0
+			receptor.last_press = Receptor.ReceptorInput.new()
 			receptor.sort_notes()
 			for note in receptor.notes:
 				note.time -= note.length_taken

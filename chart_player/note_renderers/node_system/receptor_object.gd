@@ -12,6 +12,9 @@ var receptor: Receptor
 func init_notes() -> void:
 	notes.rotation = -rotation
 	
+	for old_note_object in notes.get_children():
+		notes.remove_child(old_note_object)
+		old_note_object.queue_free()
 	for note in receptor.notes:
 		var note_object: NoteObject = note_object_scene.instantiate()
 		note_object.note_direction = rotation_degrees.z

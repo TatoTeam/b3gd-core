@@ -7,6 +7,10 @@ extends Node3D
 var strum_line: StrumLine
 
 func _ready() -> void:
+	ChartLoader.instance.notes_loaded.connect(load_notes)
+	
+
+func load_notes():
 	strum_line = ChartPlayer.instance.chart.strum_lines[strum_line_idx]
 	for child in receptors.get_children():
 		if child is not ReceptorObject:
