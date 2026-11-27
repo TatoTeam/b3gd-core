@@ -6,9 +6,9 @@ static var instance: ChartPlayer
 @export var chart: Chart
 
 @onready var ui = $UI
-@onready var note_manager = $NoteManager
-@onready var song_audio_player: SongAudioPlayer = $SongAudioPlayer
-@onready var chart_loader: ChartLoader = $ChartLoader
+@onready var note_manager: NoteInputHandler = NoteInputHandler.instance
+@onready var song_audio_player: SongAudioPlayer = SongAudioPlayer.instance
+@onready var chart_loader: ChartLoader = ChartLoader.instance
 
 const CHART_EDITOR_CANVAS := "uid://dk3bhqjhxhv5b"
 

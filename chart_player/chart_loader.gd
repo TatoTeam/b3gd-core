@@ -10,7 +10,7 @@ signal events_loaded()
 @export_group("Node References")
 @export var chart_player: ChartPlayer
 @export var song_audio_player: SongAudioPlayer
-@export var note_manager: NoteManager
+@export var note_manager: NoteInputHandler
 @export var event_player: Node
 
 func _init():

@@ -54,7 +54,7 @@ func _ready() -> void:
 		return
 	
 	song_audio_player.beat_hit.connect(beat_hit)
-	var note_manager = NoteManager.instance
+	var note_manager = NoteInputHandler.instance
 	
 	note_manager.note_press.connect(note_press)
 	note_manager.note_miss.connect(note_miss)

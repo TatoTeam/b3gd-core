@@ -42,6 +42,9 @@ func _on_paste_button_pressed() -> void:
 		new_timeline_point.time -= time_offset
 		new_timeline_point.time += ChartEditor.song_audio_player.song_position_seconds
 		if timeline_point is Note:
+			if !ChartEditor.clipboard_note_info.has(timeline_point as Note):
+				print("Issue")
+				continue
 			var receptor: Receptor = ChartEditor.clipboard_note_info[timeline_point as Note]
 			new_timeline_point.parent = receptor
 			ChartEditor.undo_redo.add_do_reference(new_timeline_point)

@@ -1,7 +1,7 @@
 extends Node
 
 @onready var song_audio_player = ChartEditor.song_audio_player
-@onready var note_manager: NoteManager = NoteManager.instance
+@onready var note_manager: NoteInputHandler = NoteInputHandler.instance
 @onready var audio_stream_player = $AudioStreamPlayer
 
 const NOTE_CLICK = preload("uid://nwgw3lpaxmje")

@@ -1,6 +1,6 @@
 extends Node
-class_name NoteManager
-static var instance: NoteManager
+class_name NoteInputHandler
+static var instance: NoteInputHandler
 
 signal note_press(strum_line_id: int, receptor_id: int, note: Note, hold_delta: float)
 signal note_miss(strum_line_id: int, receptor_id: int, note: Note)
@@ -36,7 +36,9 @@ func cpu_receptor_input(strum_line_id, receptor_id):
 	while receptor.notes[receptor.active_note_id].time <= song_audio_player.song_position_seconds:
 		hit_note(strum_line_id, receptor_id)
 		receptor.last_press.ignore_draw = false
-		if receptor.notes.size() == 0 or receptor.notes[receptor.active_note_id].note_state == Note.NoteState.NOTE_STARTED:
+		if receptor.active_note_id >= receptor.notes.size():
+			return
+		if receptor.notes[receptor.active_note_id].note_state == Note.NoteState.NOTE_STARTED:
 			return
 
 func player_receptor_input(strum_line_id, receptor_id):
