@@ -54,11 +54,11 @@ func update_notes() -> void:
 	for note_object:NoteObject in notes.get_children():
 		var note: Note = note_object.note
 		var note_y = SongAudioPlayer.instance.song_position_seconds - note.time
-		note_object.position.y = note_y * 3
+		note_object.position.y = note_y * ChartPlayer.instance.chart.scroll_speed
 		
 		if note.length > 0:
-			note_object.hold_end.position.y = -note.length * 3
-			note_object.hold_join.position.y = note.length * 3
+			note_object.hold_end.position.y = -note.length * ChartPlayer.instance.chart.scroll_speed
+			note_object.hold_join.position.y = note.length * ChartPlayer.instance.chart.scroll_speed
 			note_object.hold_join.scale.y = note_object.hold_join.position.y * 3.13
 		else:
 			note_object.hold_end.hide()
