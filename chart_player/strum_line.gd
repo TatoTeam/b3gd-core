@@ -8,6 +8,7 @@ var strum_line: StrumLine
 
 func _ready() -> void:
 	ChartLoader.instance.notes_loaded.connect(load_notes)
+	load_notes()
 	
 
 func load_notes():
