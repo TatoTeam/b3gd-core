@@ -2,9 +2,16 @@
 
 [ext_resource type="Script" uid="uid://deaqasrxhhenn" path="res://b3gd/chart_player/note_renderers/node_system/note_object.gd" id="1_p7tqa"]
 [ext_resource type="Texture2D" uid="uid://dhh5fdadf5hpp" path="res://b3gd/chart_player/noteskin.png" id="1_w8rag"]
+[ext_resource type="Script" uid="uid://ct2l7465y5htf" path="res://b3gd/chart_player/note_renderers/node_system/quant_frame_setter.gd" id="2_1b4b1"]
 
 [node name="Note" type="Node3D" unique_id=1931072008]
 script = ExtResource("1_p7tqa")
+
+[node name="QuantFrameSetter" type="Node" parent="." unique_id=1861199411 node_paths=PackedStringArray("set_frame_on")]
+script = ExtResource("2_1b4b1")
+set_frame_on = [NodePath("../Note"), NodePath("../Node3D/HoldEnd"), NodePath("../Node3D/HoldEnd2")]
+frame_direction = 1
+quant_frame_list = Array[int]([2, 3, 4, 5, 6, 7, 8, 9, 10])
 
 [node name="Note" type="Sprite3D" parent="." unique_id=2089016890]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.001)
@@ -36,3 +43,5 @@ texture = ExtResource("1_w8rag")
 hframes = 11
 vframes = 6
 frame = 35
+
+[connection signal="note_updated" from="." to="QuantFrameSetter" method="_on_note_note_updated"]

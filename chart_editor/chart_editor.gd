@@ -4,10 +4,14 @@ class_name ChartEditor
 static var instance: ChartEditor
 static var undo_redo: UndoRedo:
 	get():
+		if instance == null:
+			return null
 		return instance._undo_redo
 
 static var song_audio_player: SongAudioPlayer:
 	get():
+		if instance == null:
+			return null
 		return instance._song_audio_player
 
 static var selection: Array[TimelinePoint] = []
@@ -47,23 +51,11 @@ static var QUANT_COLORS: Array[Color] = [
 	Color.from_string("999999", Color.BLACK)
 ]
 
-static func get_quant_id(note_time: float) -> int:
-	return get_quant_id_from_beat(ChartEditor.song_audio_player.get_beat_from_seconds(note_time))
-
-const QUANT_LIST := [48, 24, 16, 12, 8, 6, 4, 3]
-
-static func get_quant_id_from_beat(note_beat: float) -> int:
-	var note_beat_quant_res: int = round(note_beat * QUANT_LIST[0])
-	for i in QUANT_LIST.size():
-		if note_beat_quant_res % QUANT_LIST[i] == 0:
-			return i
-	return QUANT_LIST.size() - 1
-
 static func get_quant_color(note_time: float) -> Color:
-	return QUANT_COLORS[get_quant_id(note_time)]
+	return QUANT_COLORS[Note.get_quant_id(note_time)]
 
 static func get_quant_color_from_beat(note_beat: float) -> Color:
-	return QUANT_COLORS[get_quant_id_from_beat(note_beat)]
+	return QUANT_COLORS[Note.get_quant_id_from_beat(note_beat)]
 
 static func add_new_selection(selectables: Array[TimelinePoint]):
 	undo_redo.create_action("Add New Selection")
@@ -210,8 +202,8 @@ func add_event(event: Event):
 
 func _init():
 	instance = self
-	
 	_undo_redo = UndoRedo.new()
+	_song_audio_player = SongAudioPlayer.instance
 
 func _ready():
 	song_audio_player.pause()
